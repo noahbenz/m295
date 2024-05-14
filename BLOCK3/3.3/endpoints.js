@@ -5,8 +5,10 @@ import fetch from 'node-fetch';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const posts = [];
 
 const app = express();
+app.use(express.json());
 const port = 3000;
 
 // Endpunkt: /now -> WORKS
@@ -77,6 +79,19 @@ app.get('/test', (_, response) => {
 app.get('/2test', (request, response) => {
     const lan = request.headers['accept-language']
     response.send(lan)
+});
+
+// Post that receives information
+app.post('/posts', (request, response) => {
+    const { title, content } = request.body;
+    const newPost = { title, content };
+    posts.push(newPost);
+    response.status(201).json({ message: 'Post erfolgreich erstellt', post: newPost });
+});
+
+// Getter that displays the information given through my post
+app.get('/posts', (request, response) => {
+    response.json(posts);
 });
 
 app.listen(port, () => {
