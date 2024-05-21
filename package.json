@@ -1,7 +1,10 @@
 {
   "type": "module",
   "dependencies": {
+    "basic-auth": "^2.0.1",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-basic-auth": "^1.2.1",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
