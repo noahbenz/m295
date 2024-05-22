@@ -3,13 +3,36 @@ import { nanoid } from 'nanoid';
 import cors from 'cors';
 import session from 'express-session';
 import jwt from 'jsonwebtoken';
+import swaggerAutogenImport from 'swagger-autogen';
+import fs from 'fs';
+import swaggerUiExpress from 'swagger-ui-express';
+const swaggerAutogen = swaggerAutogenImport();
 
+const doc = {
+  info: {
+    title: 'Meine Aufgaben',
+    description: 'ÜK 295',
+  },
+  host: 'localhost:3000',
+  definitions: {
+    Task: {
+      id: '',
+      title: '',
+      description: '',
+      creator: '',
+      doneAt: '',
+    },
+  },
+};
+
+const outputFile = './swagger.json';
+const routes = ['./tasks.js'];
+
+swaggerAutogen(outputFile, routes, doc);
 const app = express();
 const port = 3000;
-const SECRET_KEY = 'mysecretkey-295-noah'; 
+const SECRET_KEY = 'mysecretkey-295-noah';
 const VALID_PASSWORD = 'm295';
-// Imports copied from task 7.3 
-// Most of the tasks were done with the task from 7.3
 
 // Middleware-Funktionen -> authorize for every request
 const authorizeUser = (req, res, next) => {
@@ -42,7 +65,9 @@ app.use(session({
     saveUninitialized: true
 }));
 
-// Regex copied 
+// Swagger endpoint
+app.use('/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(JSON.parse(fs.readFileSync('./swagger.json'))));
+// Regex copied
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; //https://emaillistvalidation.com/blog/email-validation-in-javascript-using-regular-expressions-the-ultimate-guide/
 
 // Login-Endpunkt /POST
@@ -64,6 +89,7 @@ app.post('/login', saveUserToSession, (req, res) => {
 
 // Verify-Endpunkt /GET
 app.get('/verify', (req, res) => {
+    // #swagger.tags = ['Auth']
     const token = req.session.token; // Get token back from session
     if (!token) {
         return res.status(401).json({ error: 'No session found' });
@@ -79,6 +105,7 @@ app.get('/verify', (req, res) => {
 
 // Logout-Endpunkt /DELETE
 app.delete('/logout', (req, res) => {
+    // #swagger.tags = ['Auth']
     req.session.destroy(err => {
         if (err) {
             console.error('Error destroying session:', err);
@@ -96,13 +123,15 @@ const tasks = [
 ];
 
 // Tasks-Endpoints
-// Get all tasks /GET 
+// Get all tasks /GET
 app.get('/tasks', authorizeUser, (req, res) => {
+    // #swagger.tags = ['Tasks']
     res.status(200).json(tasks);
 });
 
-// Create new task /POST 
-app.post('/tasks', authorizeUser,  (req, res) => {
+// Create new task /POST
+app.post('/tasks', authorizeUser, (req, res) => {
+    // #swagger.tags = ['Tasks']
     if (!req.body.title || !req.body.description || req.body.doneAt === undefined) {
         return res.status(400).json({ error: 'Title, description, and doneAt are required' });
     }
@@ -121,8 +150,10 @@ app.post('/tasks', authorizeUser,  (req, res) => {
     tasks.push(newTask);
     res.status(201).json(newTask);
 });
+
 // Get task with id /GET
 app.get('/tasks/:id', authorizeUser, (req, res) => {
+    // #swagger.tags = ['Tasks']
     const task = tasks.find(t => t.id === req.params.id);
     if (!task) {
         return res.status(404).json({ error: 'Task not found' });
@@ -132,6 +163,7 @@ app.get('/tasks/:id', authorizeUser, (req, res) => {
 
 // Edit task with id /PUT
 app.put('/tasks/:id', authorizeUser, (req, res) => {
+    // #swagger.tags = ['Tasks']
     const { title, description, doneAt, creator } = req.body;
     const taskIndex = tasks.findIndex(t => t.id === req.params.id);
     if (taskIndex === -1) {
@@ -142,7 +174,8 @@ app.put('/tasks/:id', authorizeUser, (req, res) => {
 });
 
 // Delete task with id /DELETE
-app.delete('/tasks/:id', authorizeUser,  (req, res) => {
+app.delete('/tasks/:id', authorizeUser, (req, res) => {
+    // #swagger.tags = ['Tasks']
     const taskIndex = tasks.findIndex(t => t.id === req.params.id);
     if (taskIndex === -1) {
         return res.status(404).json({ error: 'Task not found' });

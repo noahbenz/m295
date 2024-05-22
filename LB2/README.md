@@ -44,3 +44,6 @@ DELETE /tasks/{id}: Aufgabe löschen.
 ``` eslint.config.js ```: Enthält die Konfiguration für Eslint.
 
 - ``` README.md ```: Enthält diese Doku.
+
+## Eslint
+Ausführung : ```npx eslint tasks.js```
