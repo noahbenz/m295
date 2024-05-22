@@ -13,6 +13,21 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const authorizeUser = (req, res, next) => { // Add to implement security before using the task endpoints
+    const token = req.session.token;
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized. Please login first.' });
+    }
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ error: 'Invalid session. Please login again.' });
+        }
+        req.decoded = decoded;
+        next();
+    });
+};
+
+
 const saveUserToSession = (req, res, next) => {
     const { email } = req.body;
     req.session.email = email; // Save user email to session
@@ -79,12 +94,12 @@ const tasks = [
 ];
 
 // GET /tasks endpoint -> A1 [x]
-app.get('/tasks', (req, res) => {
+app.get('/tasks', authorizeUser, (req, res) => {
     res.status(200).json(tasks);
 });
 
 // POST /tasks endpoint -> A2 [x]
-app.post('/tasks', (req, res) => {
+app.post('/tasks', authorizeUser,  (req, res) => {
     if (!req.body.title || !req.body.description || req.body.doneAt === undefined) {
         return res.status(400).json({ error: 'Title, description, and doneAt are required' });
     }
@@ -105,7 +120,7 @@ app.post('/tasks', (req, res) => {
 });
 
 // GET /tasks/:id endpoint -> A3 [x]
-app.get('/tasks/:id', (req, res) => {
+app.get('/tasks/:id', authorizeUser, (req, res) => {
     const task = tasks.find(t => t.id === req.params.id);
     if (!task) {
         return res.status(404).json({ error: 'Task not found' });
@@ -114,7 +129,7 @@ app.get('/tasks/:id', (req, res) => {
 });
 
 // PUT /tasks/:id endpoint -> A4 [x]
-app.put('/tasks/:id', (req, res) => {
+app.put('/tasks/:id', authorizeUser, (req, res) => {
     const { title, description, doneAt, creator } = req.body;
     const taskIndex = tasks.findIndex(t => t.id === req.params.id);
     if (taskIndex === -1) {
@@ -125,7 +140,7 @@ app.put('/tasks/:id', (req, res) => {
 });
 
 // DELETE /tasks/:id endpoint -> A5 [x]
-app.delete('/tasks/:id', (req, res) => {
+app.delete('/tasks/:id', authorizeUser,  (req, res) => {
     const taskIndex = tasks.findIndex(t => t.id === req.params.id);
     if (taskIndex === -1) {
         return res.status(404).json({ error: 'Task not found' });
