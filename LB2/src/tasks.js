@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 const app = express();
 const port = 3000;
-const SECRET_KEY = 'mysecretkey-295-noah'; // Use a strong secret key for JWT
+const SECRET_KEY = 'mysecretkey-295-noah'; 
 const VALID_PASSWORD = 'm295';
 
 app.use(cors());
