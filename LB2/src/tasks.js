@@ -8,12 +8,11 @@ const app = express();
 const port = 3000;
 const SECRET_KEY = 'mysecretkey-295-noah'; 
 const VALID_PASSWORD = 'm295';
+// Imports copied from task 7.3 
+// Most of the tasks were done with the task from 7.3
 
-app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-const authorizeUser = (req, res, next) => { // Add to implement security before using the task endpoints
+// Middleware-Funktionen -> authorize for every request
+const authorizeUser = (req, res, next) => {
     const token = req.session.token;
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized. Please login first.' });
@@ -27,22 +26,26 @@ const authorizeUser = (req, res, next) => { // Add to implement security before 
     });
 };
 
-
 const saveUserToSession = (req, res, next) => {
     const { email } = req.body;
     req.session.email = email; // Save user email to session
     next();
 };
+
+// Session-Konfiguration
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(session({
     secret: 'secret',
     resave: false,
-    saveUninitialized: true,
-    cookie: {}
+    saveUninitialized: true
 }));
 
+// Regex copied 
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; //https://emaillistvalidation.com/blog/email-validation-in-javascript-using-regular-expressions-the-ultimate-guide/
 
-// POST /login endpoint -> A6 [x]
-const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/; 
+// Login-Endpunkt /POST
 app.post('/login', saveUserToSession, (req, res) => {
     const { email, password } = req.body;
 
@@ -59,9 +62,9 @@ app.post('/login', saveUserToSession, (req, res) => {
     }
 });
 
-// GET /verify endpoint -> A7 [x]
+// Verify-Endpunkt /GET
 app.get('/verify', (req, res) => {
-    const token = req.session.token;
+    const token = req.session.token; // Get token back from session
     if (!token) {
         return res.status(401).json({ error: 'No session found' });
     }
@@ -74,7 +77,7 @@ app.get('/verify', (req, res) => {
     });
 });
 
-// DELETE /logout endpoint -> A8 [x]
+// Logout-Endpunkt /DELETE
 app.delete('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -85,20 +88,20 @@ app.delete('/logout', (req, res) => {
     });
 });
 
-
-// All Tasks
+// Alle Tasks
 const tasks = [
     { id: nanoid(), title: 'Noahs Task', description: 'Bring out the garbage!', doneAt: null, creator: 'Noah Benz' },
     { id: nanoid(), title: 'Toms Task', description: 'Clean the kitchen!', doneAt: null, creator: 'Tom Benz' },
     { id: nanoid(), title: 'Jasons Task', description: 'Feed the pets!', doneAt: null, creator: 'Jason Benz' },
 ];
 
-// GET /tasks endpoint -> A1 [x]
+// Tasks-Endpoints
+// Get all tasks /GET 
 app.get('/tasks', authorizeUser, (req, res) => {
     res.status(200).json(tasks);
 });
 
-// POST /tasks endpoint -> A2 [x]
+// Create new task /POST 
 app.post('/tasks', authorizeUser,  (req, res) => {
     if (!req.body.title || !req.body.description || req.body.doneAt === undefined) {
         return res.status(400).json({ error: 'Title, description, and doneAt are required' });
@@ -118,8 +121,7 @@ app.post('/tasks', authorizeUser,  (req, res) => {
     tasks.push(newTask);
     res.status(201).json(newTask);
 });
-
-// GET /tasks/:id endpoint -> A3 [x]
+// Get task with id /GET
 app.get('/tasks/:id', authorizeUser, (req, res) => {
     const task = tasks.find(t => t.id === req.params.id);
     if (!task) {
@@ -128,7 +130,7 @@ app.get('/tasks/:id', authorizeUser, (req, res) => {
     res.status(200).json(task);
 });
 
-// PUT /tasks/:id endpoint -> A4 [x]
+// Edit task with id /PUT
 app.put('/tasks/:id', authorizeUser, (req, res) => {
     const { title, description, doneAt, creator } = req.body;
     const taskIndex = tasks.findIndex(t => t.id === req.params.id);
@@ -139,7 +141,7 @@ app.put('/tasks/:id', authorizeUser, (req, res) => {
     res.status(200).json(tasks[taskIndex]);
 });
 
-// DELETE /tasks/:id endpoint -> A5 [x]
+// Delete task with id /DELETE
 app.delete('/tasks/:id', authorizeUser,  (req, res) => {
     const taskIndex = tasks.findIndex(t => t.id === req.params.id);
     if (taskIndex === -1) {
@@ -151,7 +153,14 @@ app.delete('/tasks/:id', authorizeUser,  (req, res) => {
         task: deletedTask,
         message: 'Attention - This task has been removed by you!'
     };
-    res.status(200).json(response);});
+    res.status(200).json(response);
+});
+
+// Error-Handling-Middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
