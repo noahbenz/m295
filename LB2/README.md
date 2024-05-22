@@ -19,11 +19,16 @@ Kommando : `` npm i `` -> Installiert die Abhängigkeiten
 1. Gehen Sie in den Ordner ``` LB2/src ```
 2. Kommando : Mit ``` node tasks.js ``` oder mit nodemon : ``` nodemon tasks.js ```
 
+**Schritt 3**: App nutzen
+1. Sie müssen eingeloggt sein um die App zu nutzen, sonst kann man keine request machen.
+2. Machen Sue requests zb im Postman.
+3. Unten sind die dazugehörigen Endpunkte.
+
 ## API-Endpunkte
 **Authentifizierung und Autorisierung**
-POST /login: Benutzeranmeldung.
-GET /verify: Überprüft die Sitzung.
-DELETE /logout: Beendet die Sitzung.
+POST /login: Anmelden mit Credentials um token zu bekommen.
+GET /verify: Überprüft die Session.
+DELETE /logout: Beendet die Session.
 
 **Aufgabenverwaltung**
 GET /tasks: Alle Aufgaben abrufen.
