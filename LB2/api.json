@@ -19,6 +19,15 @@
 					"response": []
 				},
 				{
+					"name": "Failing test  (wrong Id)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/xcys"
+					},
+					"response": []
+				},
+				{
 					"name": "Get a task with id",
 					"request": {
 						"method": "GET",
