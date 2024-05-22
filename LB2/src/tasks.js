@@ -3,13 +3,10 @@ import { nanoid } from 'nanoid';
 import cors from 'cors';
 import session from 'express-session';
 import jwt from 'jsonwebtoken';
-import { fileURLToPath } from 'url';
-import path from 'path';
 
 const app = express();
 const port = 3000;
 const SECRET_KEY = 'mysecretkey-295-noah'; // Use a strong secret key for JWT
-const VALID_EMAIL = 'noah.benz@gmx.ch';
 const VALID_PASSWORD = 'm295';
 
 app.use(cors());
@@ -134,8 +131,12 @@ app.delete('/tasks/:id', (req, res) => {
         return res.status(404).json({ error: 'Task not found' });
     }
     const deletedTask = tasks.splice(taskIndex, 1)[0];
-    res.status(200).json(deletedTask);
-});
+
+    const response = {
+        task: deletedTask,
+        message: 'Attention - This task has been removed by you!'
+    };
+    res.status(200).json(response);});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
