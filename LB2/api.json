@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "a0d1d9cf-93ad-4275-92d0-2ade0aaadab1",
+		"name": "LB2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "34911839"
+	},
+	"item": [
+		{
+			"name": "Tasks Js",
+			"item": [
+				{
+					"name": "Get all tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a task with id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a task with id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"ENmTZn7oCe1ScdB5jxro1\",\r\n    \"title\": \"Update -> Visit grandpa\",\r\n    \"description\": \"wednesday\",\r\n    \"doneAt\": false,\r\n    \"creator\": \"Mara\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/tasks/ENmTZn7oCe1ScdB5jxro1"
+					},
+					"response": []
+				},
+				{
+					"name": "Edit a task with id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:3000/tasks/r_aIWtaW6XR4ieEJ1vnMj"
+					},
+					"response": []
+				},
+				{
+					"name": "Create a new task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Visit grandma\",\r\n    \"description\": \"tomorrow\",\r\n    \"doneAt\": true\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/tasks"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth JS",
+			"item": [
+				{
+					"name": "Login with credentials",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"Buy groceries\",\r\n    \"password\": \"Milk, Bread, Eggs\",\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify session credentials",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/verify"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout and delete session",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"ENmTZn7oCe1ScdB5jxro1\",\r\n    \"title\": \"Update -> Visit grandpa\",\r\n    \"description\": \"wednesday\",\r\n    \"doneAt\": false,\r\n    \"creator\": \"Mara\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/tasks/ENmTZn7oCe1ScdB5jxro1"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
