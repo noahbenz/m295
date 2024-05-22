@@ -17,7 +17,7 @@ Kommando : `` npm i `` -> Installiert die Abhängigkeiten
 
 **Schritt 3**: App starten
 1. Gehen Sie in den Ordner ``` LB2/src ```
-2. Kommando : Mit ``` node tasks.js ``` oder mit nodemon : ``` nodemon tasks.js ```
+2. Kommando : Mit ``` node server.js ``` oder mit nodemon : ``` nodemon server.js ```
 
 **Schritt 3**: App nutzen
 1. Sie müssen eingeloggt sein um die App zu nutzen, sonst kann man keine request machen.
@@ -38,7 +38,9 @@ PUT /tasks/{id}: Aufgabe aktualisieren.
 DELETE /tasks/{id}: Aufgabe löschen.
 
 ## Files 
-- ``` tasks.js ```: Enthält die ganze Logik (Im src Ordner)
+- ``` authRouter.js ```: Enthält alle auth Routen
+- ``` tasksRouter.js ```: Enthält alle Tasks routen
+- ``` server.js ```: Enthält die ganze logik 
 
 - ``` api.json ```: Enthält alle Abfragen die in Postman gemacht wurden.
 ``` eslint.config.js ```: Enthält die Konfiguration für Eslint.
@@ -46,8 +48,8 @@ DELETE /tasks/{id}: Aufgabe löschen.
 - ``` README.md ```: Enthält diese Doku.
 
 ## Eslint
-Ausführung : ```npx eslint tasks.js```
+Ausführung : ```npx eslint server.js```
 
 ## Open Swagger
-Kommando : node tasks.js
+Kommando : node server.js
 Url: ```http://localhost:3000/api-docs/```
