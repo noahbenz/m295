@@ -47,3 +47,7 @@ DELETE /tasks/{id}: Aufgabe löschen.
 
 ## Eslint
 Ausführung : ```npx eslint tasks.js```
+
+## Open Swagger
+Kommando : node tasks.js
+Url: ```http://localhost:3000/api-docs/```
